@@ -1,36 +1,37 @@
 {
-  "name": "css-clean",
-  "version": "1.1.1",
-  "description": "A utility for formatting css and sass",
+  "name": "css-parsley",
+  "version": "1.0.0",
+  "description": "A CSS parser (early development)",
   "main": "index.js",
-  "bin": {
-    "cssclean": "./index.bin.js"
-  },
   "scripts": {
+    "start": "webpack --watch",
+    "build": "NODE_ENV=production webpack",
     "test": "node test/"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/SeanJM/css-clean.git"
+    "url": "git+https://github.com/SeanJM/css-parsley.git"
   },
   "keywords": [
     "css",
-    "prettyprint",
-    "format",
-    "sass"
+    "parser"
   ],
   "author": "Sean MacIsaac <seanjmacisaac@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/SeanJM/css-clean/issues"
+    "url": "https://github.com/SeanJM/css-parser/issues"
   },
-  "homepage": "https://github.com/SeanJM/css-clean#readme",
+  "homepage": "https://github.com/SeanJM/css-parser#readme",
   "dependencies": {
-    "grunt": "^1.0.1",
-    "grunt-contrib-concat": "^1.0.1",
-    "grunt-contrib-copy": "^1.0.0",
-    "grunt-contrib-watch": "^1.0.0",
-    "lasso-string": "^5.1.0",
-    "match-file-utility": "^3.4.0"
+    "babel-cli": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.1",
+    "tiny-test": "^0.9.4"
+  },
+  "devDependencies": {
+    "eslint": "^4.14.0",
+    "eslint-plugin-dependencies": "^2.4.0",
+    "webpack": "^3.10.0",
+    "webpack-node-externals": "^1.6.0"
   }
 }
