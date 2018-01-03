@@ -10,6 +10,10 @@ export default function style(o) {
   let index  = 0;
   let length = o.str.indexOf("{", o.index);
   while (o.index < length) {
+    while (/\s/.test(o.str[o.index])) {
+      o.index += 1;
+    }
+
     if (typeof result.selector[index] === "undefined") {
       result.selector[index] = "";
     }

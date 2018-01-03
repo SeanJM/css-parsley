@@ -116,10 +116,18 @@ var _style = __webpack_require__(2);
 
 var _style2 = _interopRequireDefault(_style);
 
+var _comment = __webpack_require__(4);
+
+var _comment2 = _interopRequireDefault(_comment);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function capture(o) {
-  return (0, _style2.default)(o);
+  if (o.str.substring(o.index, o.index + 2) === "/*") {
+    return (0, _comment2.default)(o);
+  } else {
+    return (0, _style2.default)(o);
+  }
 }
 
 /***/ }),
@@ -150,6 +158,10 @@ function style(o) {
   var index = 0;
   var length = o.str.indexOf("{", o.index);
   while (o.index < length) {
+    while (/\s/.test(o.str[o.index])) {
+      o.index += 1;
+    }
+
     if (typeof result.selector[index] === "undefined") {
       result.selector[index] = "";
     }
@@ -213,6 +225,38 @@ function declaration(o) {
     o.index += 1;
   }
 
+  return result;
+}
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = comment;
+function comment(o) {
+  var result = {
+    type: "comment",
+    declaration: []
+  };
+
+  var length = o.str.indexOf("*/", o.index);
+  var str = "";
+
+  o.index += 2;
+
+  while (o.index < length) {
+    str += o.str[o.index];
+    o.index += 1;
+  }
+
+  o.index += 1;
+  result.declaration = str.split("\n");
   return result;
 }
 
