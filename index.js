@@ -246,15 +246,37 @@ function block(o) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 exports.default = captureDeclaration;
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Declaration = function () {
+  function Declaration() {
+    _classCallCheck(this, Declaration);
+
+    this.type = "declaration";
+  }
+
+  _createClass(Declaration, [{
+    key: "toString",
+    value: function toString(depth) {
+      var d = depth || 0;
+      var tab = new Array(d + 1).join("  ");
+      return tab + this.property + ": " + this.value + ";\n";
+    }
+  }]);
+
+  return Declaration;
+}();
+
 function captureDeclaration(o) {
+  var element = new Declaration();
+
   var property = "";
   var value = "";
-
-  var element = {
-    type: "declaration"
-  };
-
   var capture = true;
 
   while (o.str[o.index] !== ":" && o.index < o.length) {
@@ -309,12 +331,33 @@ exports.default = {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 exports.default = captureComment;
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Comment = function () {
+  function Comment() {
+    _classCallCheck(this, Comment);
+
+    this.type = "comment";
+    this.declaration = [];
+  }
+
+  _createClass(Comment, [{
+    key: "toString",
+    value: function toString() {
+      return "/* " + this.declaration.join("\n") + "*/";
+    }
+  }]);
+
+  return Comment;
+}();
+
 function captureComment(o) {
-  var result = {
-    type: "comment",
-    declaration: []
-  };
+  var result = new Comment();
 
   var length = o.str.indexOf("*/", o.index);
   var str = "";
@@ -341,6 +384,9 @@ function captureComment(o) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 exports.default = captureStyle;
 
 var _IS_SPACE = __webpack_require__(9);
@@ -353,12 +399,33 @@ var _block2 = _interopRequireDefault(_block);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Style = function () {
+  function Style() {
+    _classCallCheck(this, Style);
+
+    this.type = "style";
+    this.selector = [];
+    this.value = [];
+  }
+
+  _createClass(Style, [{
+    key: "toString",
+    value: function toString(depth) {
+      var d = depth || 0;
+      var tab = new Array(d + 1).join("  ");
+      return tab + this.selector.join(",") + " {\n" + this.value.map(function (element) {
+        return element.toString(d + 1);
+      }) + tab + "}\n";
+    }
+  }]);
+
+  return Style;
+}();
+
 function captureStyle(o) {
-  var result = {
-    type: "style",
-    selector: [],
-    value: []
-  };
+  var result = new Style();
 
   var length = o.str.indexOf("{", o.index);
   var selector = "";
@@ -389,6 +456,9 @@ function captureStyle(o) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 exports.default = captureMedia;
 
 var _IS_SPACE = __webpack_require__(9);
@@ -401,12 +471,33 @@ var _index2 = _interopRequireDefault(_index);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Media = function () {
+  function Media() {
+    _classCallCheck(this, Media);
+
+    this.type = "media";
+    this.selector = [];
+    this.value = [];
+  }
+
+  _createClass(Media, [{
+    key: "toString",
+    value: function toString(depth) {
+      var d = depth || 0;
+      var tab = new Array(d + 1).join("  ");
+      return tab + "@media " + this.selector.join(",") + " {\n" + this.value.map(function (element) {
+        return element.toString(d + 1);
+      }) + tab + "}\n";
+    }
+  }]);
+
+  return Media;
+}();
+
 function captureMedia(o) {
-  var result = {
-    type: "media",
-    selector: [],
-    value: []
-  };
+  var result = new Media();
 
   var length = o.str.indexOf("{", o.index);
   var selector = "";

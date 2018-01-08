@@ -1,11 +1,19 @@
-export default function captureComment(o) {
-  const result = {
-    type        : "comment",
-    declaration : []
-  };
+class Comment {
+  constructor() {
+    this.type        = "comment";
+    this.declaration = [];
+  }
 
-  let length = o.str.indexOf("*/", o.index);
-  let str    = "";
+  toString() {
+    return "/* " + this.declaration.join("\n") + "*/";
+  }
+}
+
+export default function captureComment(o) {
+  const result = new Comment();
+
+  let length   = o.str.indexOf("*/", o.index);
+  let str      = "";
 
   o.index += 2;
 

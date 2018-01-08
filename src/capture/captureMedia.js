@@ -1,12 +1,24 @@
 import IS_SPACE from "../constants/IS_SPACE";
 import capture  from "./index";
 
+class Media {
+  constructor() {
+    this.type     = "media";
+    this.selector = [];
+    this.value    = [];
+  }
+
+  toString(depth) {
+    const d   = depth || 0;
+    const tab = new Array(d + 1).join("  ");
+    return tab + "@media " + this.selector.join(",") + " {\n" +
+      this.value.map(element => element.toString(d + 1)) +
+    tab + "}\n";
+  }
+}
+
 export default function captureMedia(o) {
-  const result = {
-    type     : "media",
-    selector : [],
-    value    : []
-  };
+  const result = new Media();
 
   let length   = o.str.indexOf("{", o.index);
   let selector = "";

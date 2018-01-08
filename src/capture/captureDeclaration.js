@@ -1,11 +1,20 @@
+class Declaration {
+  constructor() {
+    this.type = "declaration";
+  }
+
+  toString(depth) {
+    const d   = depth || 0;
+    const tab = new Array(d + 1).join("  ");
+    return tab + this.property + ": " + this.value + ";\n";
+  }
+}
+
 export default function captureDeclaration(o) {
-  let property = "";
-  let value    = "";
+  const element = new Declaration();
 
-  const element = {
-    type : "declaration"
-  };
-
+  let property  = "";
+  let value     = "";
   let capture = true;
 
   while (o.str[o.index] !== ":" && o.index < o.length) {

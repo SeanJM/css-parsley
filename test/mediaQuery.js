@@ -18,24 +18,16 @@ module.exports = function (test) {
     .isDeepEqual(function () {
       return [{
         type     : "media",
-        selector : [
-          "only screen and (min-device-width : 601px)"
-        ],
-        "value": [
-          {
-            type     : "style",
-            selector : [
-              ".content"
-            ],
-            value : [
-              {
-                type     : "declaration",
-                property : "width",
-                value    : "600px !important"
-              }
-            ]
-          }
-        ]
+        selector : [ "only screen and (min-device-width : 601px)" ],
+        value : [{
+          type     : "style",
+          selector : [ ".content" ],
+          value : [{
+            type     : "declaration",
+            property : "width",
+            value    : "600px !important"
+          }]
+        }]
       }];
     });
 };

@@ -1,12 +1,24 @@
 import IS_SPACE   from "../constants/IS_SPACE";
 import block      from "./block";
 
+class Style {
+  constructor() {
+    this.type     = "style";
+    this.selector = [];
+    this.value    = [];
+  }
+
+  toString(depth) {
+    const d   = depth || 0;
+    const tab = new Array(d + 1).join("  ");
+    return tab + this.selector.join(",") + " {\n" +
+    this.value.map(element => element.toString(d + 1))
+    + tab + "}\n";
+  }
+}
+
 export default function captureStyle(o) {
-  const result = {
-    type     : "style",
-    selector : [],
-    value    : []
-  };
+  const result = new Style();
 
   let length   = o.str.indexOf("{", o.index);
   let selector = "";
