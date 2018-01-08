@@ -1,4 +1,4 @@
-export default function comment(o) {
+export default function captureComment(o) {
   const result = {
     type        : "comment",
     declaration : []
@@ -14,7 +14,7 @@ export default function comment(o) {
     o.index += 1;
   }
 
-  o.index += 1;
+  o.index           += 1;
   result.declaration = str.split("\n");
   return result;
 }

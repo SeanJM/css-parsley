@@ -76,113 +76,84 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = parser;
 
-var _captureRule = __webpack_require__(6);
+var _capture = __webpack_require__(1);
 
-var _captureRule2 = _interopRequireDefault(_captureRule);
+var _capture2 = _interopRequireDefault(_capture);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function parser(str) {
-  var groups = [];
   var o = {
     str: str,
     index: 0,
     length: str.length
   };
 
+  return (0, _capture2.default)(o);
+}
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = capture;
+
+var _captureRule = __webpack_require__(6);
+
+var _captureRule2 = _interopRequireDefault(_captureRule);
+
+var _IS_SPACE = __webpack_require__(9);
+
+var _IS_SPACE2 = _interopRequireDefault(_IS_SPACE);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function capture(o) {
+  var groups = [];
+  var open = 0;
+  var start = o.index;
+
+  while (_IS_SPACE2.default[o.str[o.index]]) {
+    o.index += 1;
+  }
+
+  start = o.index;
+
+  if (o.str[start] === "{") {
+    start += 1;
+    open += 1;
+    o.index += 1;
+    while (open && o.str[start]) {
+      if (o.str[start] === "}") {
+        open -= 1;
+      } else if (o.str[start] === "{") {
+        open += 1;
+      }
+      start += 1;
+    }
+    o.length = start - 1;
+  }
+
   while (o.index < o.length) {
-    if (!/\s/.test(str[o.index])) {
+    if (!_IS_SPACE2.default[o.str[o.index]]) {
       groups.push((0, _captureRule2.default)(o));
     }
     o.index += 1;
   }
 
   return groups;
-};
-
-/***/ }),
-/* 1 */,
-/* 2 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = style;
-
-var _IS_SPACE = __webpack_require__(9);
-
-var _IS_SPACE2 = _interopRequireDefault(_IS_SPACE);
-
-var _block = __webpack_require__(7);
-
-var _block2 = _interopRequireDefault(_block);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function style(o) {
-  var result = {
-    type: "style",
-    selector: [],
-    value: []
-  };
-
-  var length = o.str.indexOf("{", o.index);
-  var selector = "";
-
-  while (_IS_SPACE2.default[o.str[o.index]] && o.str[o.index]) {
-    o.index += 1;
-  }
-
-  while (o.index < length) {
-    selector += o.str[o.index];
-    o.index += 1;
-  }
-
-  result.selector = selector.split(",").map(function (a) {
-    return a.trim();
-  });
-  result.value = (0, _block2.default)(o);
-  return result;
 }
 
 /***/ }),
+/* 2 */,
 /* 3 */,
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = comment;
-function comment(o) {
-  var result = {
-    type: "comment",
-    declaration: []
-  };
-
-  var length = o.str.indexOf("*/", o.index);
-  var str = "";
-
-  o.index += 2;
-
-  while (o.index < length) {
-    str += o.str[o.index];
-    o.index += 1;
-  }
-
-  o.index += 1;
-  result.declaration = str.split("\n");
-  return result;
-}
-
-/***/ }),
+/* 4 */,
 /* 5 */,
 /* 6 */
 /***/ (function(module, exports, __webpack_require__) {
@@ -193,24 +164,30 @@ function comment(o) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = captureBlock;
+exports.default = captureRule;
 
-var _style = __webpack_require__(2);
+var _captureStyle = __webpack_require__(11);
 
-var _style2 = _interopRequireDefault(_style);
+var _captureStyle2 = _interopRequireDefault(_captureStyle);
 
-var _comment = __webpack_require__(4);
+var _captureComment = __webpack_require__(10);
 
-var _comment2 = _interopRequireDefault(_comment);
+var _captureComment2 = _interopRequireDefault(_captureComment);
+
+var _captureMedia = __webpack_require__(12);
+
+var _captureMedia2 = _interopRequireDefault(_captureMedia);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-function captureBlock(o) {
+function captureRule(o) {
   var s = o.str.substring(o.index);
   if (s.substring(0, 2) === "/*") {
-    return (0, _comment2.default)(o);
+    return (0, _captureComment2.default)(o);
+  } else if (s.substring(0, 6) === "@media") {
+    return (0, _captureMedia2.default)(o);
   } else {
-    return (0, _style2.default)(o);
+    return (0, _captureStyle2.default)(o);
   }
 }
 
@@ -321,6 +298,135 @@ exports.default = {
   "\t": true,
   "\n": true
 };
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = captureComment;
+function captureComment(o) {
+  var result = {
+    type: "comment",
+    declaration: []
+  };
+
+  var length = o.str.indexOf("*/", o.index);
+  var str = "";
+
+  o.index += 2;
+
+  while (o.index < length) {
+    str += o.str[o.index];
+    o.index += 1;
+  }
+
+  o.index += 1;
+  result.declaration = str.split("\n");
+  return result;
+}
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = captureStyle;
+
+var _IS_SPACE = __webpack_require__(9);
+
+var _IS_SPACE2 = _interopRequireDefault(_IS_SPACE);
+
+var _block = __webpack_require__(7);
+
+var _block2 = _interopRequireDefault(_block);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function captureStyle(o) {
+  var result = {
+    type: "style",
+    selector: [],
+    value: []
+  };
+
+  var length = o.str.indexOf("{", o.index);
+  var selector = "";
+
+  while (_IS_SPACE2.default[o.str[o.index]] && o.str[o.index]) {
+    o.index += 1;
+  }
+
+  while (o.index < length) {
+    selector += o.str[o.index];
+    o.index += 1;
+  }
+
+  result.selector = selector.split(",").map(function (a) {
+    return a.trim();
+  });
+  result.value = (0, _block2.default)(o);
+  return result;
+}
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = captureMedia;
+
+var _IS_SPACE = __webpack_require__(9);
+
+var _IS_SPACE2 = _interopRequireDefault(_IS_SPACE);
+
+var _index = __webpack_require__(1);
+
+var _index2 = _interopRequireDefault(_index);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function captureMedia(o) {
+  var result = {
+    type: "media",
+    selector: [],
+    value: []
+  };
+
+  var length = o.str.indexOf("{", o.index);
+  var selector = "";
+
+  o.index += 6;
+  while (_IS_SPACE2.default[o.str[o.index]] && o.str[o.index]) {
+    o.index += 1;
+  }
+
+  while (o.index < length) {
+    selector += o.str[o.index];
+    o.index += 1;
+  }
+
+  result.selector = selector.split(",").map(function (a) {
+    return a.trim();
+  });
+  result.value = (0, _index2.default)(o);
+  return result;
+}
 
 /***/ })
 /******/ ])["default"];

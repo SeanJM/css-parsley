@@ -1,11 +1,14 @@
-import style   from "./style";
-import comment from "./comment";
+import captureStyle   from "./captureStyle";
+import captureComment from "./captureComment";
+import captureMedia   from "./captureMedia";
 
-export default function captureBlock(o) {
+export default function captureRule(o) {
   let s = o.str.substring(o.index);
   if (s.substring(0, 2) === "/*") {
-    return comment(o);
+    return captureComment(o);
+  } else if (s.substring(0, 6) === "@media") {
+    return captureMedia(o);
   } else {
-    return style(o);
+    return captureStyle(o);
   }
 }

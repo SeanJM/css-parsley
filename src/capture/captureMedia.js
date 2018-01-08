@@ -1,9 +1,9 @@
 import IS_SPACE from "../constants/IS_SPACE";
-import block from "./block";
+import capture from "./index";
 
-export default function style(o) {
+export default function captureMedia(o) {
   const result = {
-    type     : "style",
+    type     : "media",
     selector : [],
     value    : []
   };
@@ -11,6 +11,7 @@ export default function style(o) {
   let length   = o.str.indexOf("{", o.index);
   let selector = "";
 
+  o.index += 6;
   while (IS_SPACE[o.str[o.index]] && o.str[o.index]) {
     o.index += 1;
   }
@@ -21,6 +22,6 @@ export default function style(o) {
   }
 
   result.selector = selector.split(",").map(a => a.trim());
-  result.value    = block(o);
+  result.value    = capture(o);
   return result;
 }
