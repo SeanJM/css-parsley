@@ -1,11 +1,27 @@
 class Comment {
   constructor() {
-    this.type        = "comment";
-    this.declaration = [];
+    this.type  = "comment";
+    this.value = [];
   }
 
-  toString() {
-    return "/* " + this.declaration.join("\n") + "*/";
+  toString(depth) {
+    const d   = depth || 0;
+    const tab = new Array(d + 1).join("  ");
+    if (this.value.length > 1) {
+      return (
+        tab + "/*\n" +
+        this.value
+          .map(str => tab + "  " + str)
+          .join("\n") +
+        tab + "\n*/\n"
+      );
+    } else {
+      return (
+        tab + "/* " +
+        this.value.join("\n") +
+        " */\n"
+      );
+    }
   }
 }
 
@@ -22,7 +38,7 @@ export default function captureComment(o) {
     o.index += 1;
   }
 
-  o.index           += 1;
-  result.declaration = str.split("\n");
+  o.index     += 1;
+  result.value = str.trim().split("\n").map(a => a.trim());
   return result;
 }

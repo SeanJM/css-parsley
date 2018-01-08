@@ -343,13 +343,21 @@ var Comment = function () {
     _classCallCheck(this, Comment);
 
     this.type = "comment";
-    this.declaration = [];
+    this.value = [];
   }
 
   _createClass(Comment, [{
     key: "toString",
-    value: function toString() {
-      return "/* " + this.declaration.join("\n") + "*/";
+    value: function toString(depth) {
+      var d = depth || 0;
+      var tab = new Array(d + 1).join("  ");
+      if (this.value.length > 1) {
+        return tab + "/*\n" + this.value.map(function (str) {
+          return tab + "  " + str;
+        }).join("\n") + tab + "\n*/\n";
+      } else {
+        return tab + "/* " + this.value.join("\n") + " */\n";
+      }
     }
   }]);
 
@@ -370,7 +378,9 @@ function captureComment(o) {
   }
 
   o.index += 1;
-  result.declaration = str.split("\n");
+  result.value = str.trim().split("\n").map(function (a) {
+    return a.trim();
+  });
   return result;
 }
 

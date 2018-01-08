@@ -13,16 +13,46 @@ module.exports = function (test) {
       }
       `;
       const p = parse(css);
-      console.log(p[0].toString());
       return p[0].toString();
     })
-    .isDeepEqual(function () {
+    .isEqual(function () {
       return [
         "@media only screen and (min-device-width : 601px) {",
         "  .content {",
         "    width: 600px !important;",
         "  }",
         "}",
+        ""
+      ].join("\n");
+    });
+
+  test("Multi line comment (toString)")
+    .this(function () {
+      const css = `/* this is a comment */`;
+      const p = parse(css);
+      return p[0].toString();
+    })
+    .isEqual(function () {
+      return "/* this is a comment */\n";
+    });
+
+  test("Single line comment (toString)")
+    .this(function () {
+      const css = `
+        /*
+          this is a comment
+          with many lines
+        */
+      `;
+      const p = parse(css);
+      return p[0].toString();
+    })
+    .isEqual(function () {
+      return [
+        "/*",
+        "  this is a comment",
+        "  with many lines",
+        "*/",
         ""
       ].join("\n");
     });
