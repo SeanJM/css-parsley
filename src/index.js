@@ -1,4 +1,4 @@
-import capture from "./capture";
+import captureRule from "./capture/captureRule";
 
 export default function parser(str) {
   const groups = [];
@@ -11,7 +11,7 @@ export default function parser(str) {
   while (o.index < o.length) {
     if (!/\s/.test(str[o.index])) {
       groups.push(
-        capture(o)
+        captureRule(o)
       );
     }
     o.index += 1;

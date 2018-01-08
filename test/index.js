@@ -16,10 +16,12 @@ module.exports = tinyTest(function (test, load) {
           ".selector",
           "body"
         ],
-        declaration : [{
+        value : [{
+          type     : "declaration",
           property : "color",
           value    : "red"
         }, {
+          type     : "declaration",
           property : "background",
           value    : "green"
         }]
@@ -50,10 +52,12 @@ module.exports = tinyTest(function (test, load) {
         selector : [
           "body"
         ],
-        declaration : [{
+        value : [{
+          type     : "declaration",
           property : "margin",
           value    : "0"
         }, {
+          type     : "declaration",
           property : "padding",
           value    : "0"
         }]
@@ -63,7 +67,8 @@ module.exports = tinyTest(function (test, load) {
           "table",
           ".container"
         ],
-        declaration : [{
+        value : [{
+          type     : "declaration",
           property : "border-collapse",
           value    : "collapse"
         }]
@@ -72,10 +77,12 @@ module.exports = tinyTest(function (test, load) {
         selector : [
           ".container"
         ],
-        declaration : [{
+        value : [{
+          type     : "declaration",
           property : "width",
           value    : "100%"
         }, {
+          type     : "declaration",
           property : "background",
           value    : "#879dab"
         }]

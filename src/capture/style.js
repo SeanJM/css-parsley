@@ -1,33 +1,26 @@
-import declaration from "./declaration";
+import IS_SPACE from "../constants/IS_SPACE";
+import block from "./block";
 
 export default function style(o) {
   const result = {
-    type        : "style",
-    selector    : [],
-    declaration : []
+    type     : "style",
+    selector : [],
+    value    : []
   };
 
-  let index  = 0;
-  let length = o.str.indexOf("{", o.index);
-  while (o.index < length) {
-    while (/\s/.test(o.str[o.index])) {
-      o.index += 1;
-    }
+  let length   = o.str.indexOf("{", o.index);
+  let selector = "";
 
-    if (typeof result.selector[index] === "undefined") {
-      result.selector[index] = "";
-    }
-
-    while (o.str[o.index] !== "," && o.index < length) {
-      result.selector[index] += o.str[o.index];
-      o.index += 1;
-    }
-
-    result.selector[index] = result.selector[index].trim();
-    index   += 1;
+  while (IS_SPACE[o.str[o.index]] && o.str[o.index]) {
     o.index += 1;
   }
 
-  result.declaration = declaration(o);
+  while (o.index < length) {
+    selector += o.str[o.index];
+    o.index  += 1;
+  }
+
+  result.selector = selector.split(",").map(a => a.trim());
+  result.value    = block(o);
   return result;
 }

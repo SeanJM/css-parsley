@@ -76,9 +76,9 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = parser;
 
-var _capture = __webpack_require__(1);
+var _captureRule = __webpack_require__(6);
 
-var _capture2 = _interopRequireDefault(_capture);
+var _captureRule2 = _interopRequireDefault(_captureRule);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -92,7 +92,7 @@ function parser(str) {
 
   while (o.index < o.length) {
     if (!/\s/.test(str[o.index])) {
-      groups.push((0, _capture2.default)(o));
+      groups.push((0, _captureRule2.default)(o));
     }
     o.index += 1;
   }
@@ -101,36 +101,7 @@ function parser(str) {
 };
 
 /***/ }),
-/* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = capture;
-
-var _style = __webpack_require__(2);
-
-var _style2 = _interopRequireDefault(_style);
-
-var _comment = __webpack_require__(4);
-
-var _comment2 = _interopRequireDefault(_comment);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function capture(o) {
-  if (o.str.substring(o.index, o.index + 2) === "/*") {
-    return (0, _comment2.default)(o);
-  } else {
-    return (0, _style2.default)(o);
-  }
-}
-
-/***/ }),
+/* 1 */,
 /* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -142,9 +113,13 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = style;
 
-var _declaration = __webpack_require__(3);
+var _IS_SPACE = __webpack_require__(9);
 
-var _declaration2 = _interopRequireDefault(_declaration);
+var _IS_SPACE2 = _interopRequireDefault(_IS_SPACE);
+
+var _block = __webpack_require__(7);
+
+var _block2 = _interopRequireDefault(_block);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -152,83 +127,30 @@ function style(o) {
   var result = {
     type: "style",
     selector: [],
-    declaration: []
+    value: []
   };
 
-  var index = 0;
   var length = o.str.indexOf("{", o.index);
-  while (o.index < length) {
-    while (/\s/.test(o.str[o.index])) {
-      o.index += 1;
-    }
+  var selector = "";
 
-    if (typeof result.selector[index] === "undefined") {
-      result.selector[index] = "";
-    }
-
-    while (o.str[o.index] !== "," && o.index < length) {
-      result.selector[index] += o.str[o.index];
-      o.index += 1;
-    }
-
-    result.selector[index] = result.selector[index].trim();
-    index += 1;
+  while (_IS_SPACE2.default[o.str[o.index]] && o.str[o.index]) {
     o.index += 1;
   }
 
-  result.declaration = (0, _declaration2.default)(o);
+  while (o.index < length) {
+    selector += o.str[o.index];
+    o.index += 1;
+  }
+
+  result.selector = selector.split(",").map(function (a) {
+    return a.trim();
+  });
+  result.value = (0, _block2.default)(o);
   return result;
 }
 
 /***/ }),
-/* 3 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = declaration;
-function declaration(o) {
-  var result = [];
-  var length = o.str.indexOf("}", o.index);
-  var index = 0;
-
-  while (o.index < length) {
-    while (/\s/.test(o.str[o.index])) {
-      o.index += 1;
-    }
-
-    if (typeof result[index] === "undefined" && o.index < length) {
-      result[index] = {
-        property: "",
-        value: ""
-      };
-
-      while (o.str[o.index] !== ":" && o.index < length) {
-        result[index].property += o.str[o.index];
-        o.index += 1;
-      }
-      result[index].property = result[index].property.trim();
-      o.index += 1;
-
-      while (o.str[o.index] !== ";" && o.index < length) {
-        result[index].value += o.str[o.index];
-        o.index += 1;
-      }
-      result[index].value = result[index].value.trim();
-    }
-
-    index += 1;
-    o.index += 1;
-  }
-
-  return result;
-}
-
-/***/ }),
+/* 3 */,
 /* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -259,6 +181,146 @@ function comment(o) {
   result.declaration = str.split("\n");
   return result;
 }
+
+/***/ }),
+/* 5 */,
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = captureBlock;
+
+var _style = __webpack_require__(2);
+
+var _style2 = _interopRequireDefault(_style);
+
+var _comment = __webpack_require__(4);
+
+var _comment2 = _interopRequireDefault(_comment);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function captureBlock(o) {
+  var s = o.str.substring(o.index);
+  if (s.substring(0, 2) === "/*") {
+    return (0, _comment2.default)(o);
+  } else {
+    return (0, _style2.default)(o);
+  }
+}
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = block;
+
+var _captureDeclaration = __webpack_require__(8);
+
+var _captureDeclaration2 = _interopRequireDefault(_captureDeclaration);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function block(o) {
+  var children = [];
+  var capture = true;
+  var open = 0;
+  var s = "";
+
+  while (capture && o.str[o.index]) {
+    s = o.str.substring(o.index);
+
+    if (o.str[o.index] === "{") {
+      open += 1;
+    } else if (o.str[o.index] === "}") {
+      open -= 1;
+    } else if (/^[a-z-]+(\s+|):/.test(s)) {
+      children.push((0, _captureDeclaration2.default)(o));
+    }
+
+    if (open === 0) {
+      capture = false;
+    }
+
+    o.index += 1;
+  }
+
+  return children;
+}
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = captureDeclaration;
+function captureDeclaration(o) {
+  var property = "";
+  var value = "";
+
+  var element = {
+    type: "declaration"
+  };
+
+  var capture = true;
+
+  while (o.str[o.index] !== ":" && o.index < o.length) {
+    property += o.str[o.index];
+    o.index += 1;
+  }
+
+  o.index += 1;
+
+  while (capture && o.index < o.length) {
+    if (o.str.substring(o.index, o.index + 2) === "#{") {
+      while (o.str[o.index] !== "}") {
+        value += o.str[o.index];
+        o.index += 1;
+      }
+    } else if (o.str[o.index] === ";" || o.str[o.index] === "}") {
+      capture = false;
+    } else {
+      value += o.str[o.index];
+      o.index += 1;
+    }
+  }
+
+  element.property = property.trim();
+  element.value = value.trim();
+  return element;
+}
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = {
+  " ": true,
+  "\t": true,
+  "\n": true
+};
 
 /***/ })
 /******/ ])["default"];

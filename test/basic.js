@@ -9,11 +9,16 @@ module.exports = function (test) {
     .isDeepEqual(function () {
       return [{
         type     : "style",
-        selector : [ "body" ],
-        declaration : [{
-          property : "color",
-          value    : "red"
-        }]
+        selector : [
+          "body"
+        ],
+        value: [
+          {
+            type     : "declaration",
+            property : "color",
+            value    : "red"
+          }
+        ]
       }];
     });
 
@@ -25,11 +30,15 @@ module.exports = function (test) {
     .isDeepEqual(function () {
       return [{
         type     : "style",
-        selector : [ "body" ],
-        declaration : [{
+        selector : [
+          "body"
+        ],
+        value: [{
+          type     : "declaration",
           property : "color",
           value    : "red"
         }, {
+          type     : "declaration",
           property : "background",
           value    : "green"
         }]
