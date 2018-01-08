@@ -1,5 +1,5 @@
-import IS_SPACE from "../constants/IS_SPACE";
-import block from "./block";
+import IS_SPACE   from "../constants/IS_SPACE";
+import block      from "./block";
 
 export default function captureStyle(o) {
   const result = {
@@ -20,7 +20,11 @@ export default function captureStyle(o) {
     o.index  += 1;
   }
 
-  result.selector = selector.split(",").map(a => a.trim());
+  result.selector = selector
+    .replace(/\s+/g, " ")
+    .replace(/\n/g, "")
+    .split(",")
+    .map(a => a.trim());
   result.value    = block(o);
   return result;
 }

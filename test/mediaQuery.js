@@ -4,9 +4,11 @@ module.exports = function (test) {
   test("Media Query (screen)")
     .this(function () {
       const css = `
-      @media screen {
-        .selector {
-          color : red;
+      @media
+        only screen
+        and (min-device-width : 601px) {
+        .content {
+          width : 600px !important;
         }
       }
       `;
@@ -17,19 +19,21 @@ module.exports = function (test) {
       return [{
         type     : "media",
         selector : [
-          "screen"
+          "only screen and (min-device-width : 601px)"
         ],
-        value : [
+        "value": [
           {
             type     : "style",
             selector : [
-              ".selector"
+              ".content"
             ],
-            value    : [{
-              type     : "declaration",
-              property : "color",
-              value    : "red"
-            }]
+            value : [
+              {
+                type     : "declaration",
+                property : "width",
+                value    : "600px !important"
+              }
+            ]
           }
         ]
       }];

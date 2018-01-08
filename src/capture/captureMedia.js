@@ -1,5 +1,5 @@
 import IS_SPACE from "../constants/IS_SPACE";
-import capture from "./index";
+import capture  from "./index";
 
 export default function captureMedia(o) {
   const result = {
@@ -21,7 +21,11 @@ export default function captureMedia(o) {
     o.index  += 1;
   }
 
-  result.selector = selector.split(",").map(a => a.trim());
-  result.value    = capture(o);
+  result.selector = selector
+    .replace(/\s+/g, " ")
+    .replace(/\n/g, "")
+    .split(",")
+    .map(a => a.trim());
+  result.value = capture(o);
   return result;
 }

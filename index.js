@@ -372,7 +372,7 @@ function captureStyle(o) {
     o.index += 1;
   }
 
-  result.selector = selector.split(",").map(function (a) {
+  result.selector = selector.replace(/\s+/g, " ").replace(/\n/g, "").split(",").map(function (a) {
     return a.trim();
   });
   result.value = (0, _block2.default)(o);
@@ -421,7 +421,7 @@ function captureMedia(o) {
     o.index += 1;
   }
 
-  result.selector = selector.split(",").map(function (a) {
+  result.selector = selector.replace(/\s+/g, " ").replace(/\n/g, "").split(",").map(function (a) {
     return a.trim();
   });
   result.value = (0, _index2.default)(o);
