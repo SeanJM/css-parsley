@@ -1,5 +1,5 @@
-import IS_SPACE from "../constants/IS_SPACE";
-import capture  from "./index";
+import IS_SPACE     from "../constants/IS_SPACE";
+import captureBlock from "./captureBlock";
 
 class Media {
   constructor() {
@@ -38,6 +38,6 @@ export default function captureMedia(o) {
     .replace(/\n/g, "")
     .split(",")
     .map(a => a.trim());
-  result.value = capture(o);
+  result.value = captureBlock(o);
   return result;
 }

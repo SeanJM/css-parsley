@@ -154,7 +154,64 @@ function capture(o) {
 /* 2 */,
 /* 3 */,
 /* 4 */,
-/* 5 */,
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = captureBlock;
+
+var _captureDeclaration = __webpack_require__(8);
+
+var _captureDeclaration2 = _interopRequireDefault(_captureDeclaration);
+
+var _captureStyle = __webpack_require__(11);
+
+var _captureStyle2 = _interopRequireDefault(_captureStyle);
+
+var _IS_SPACE = __webpack_require__(9);
+
+var _IS_SPACE2 = _interopRequireDefault(_IS_SPACE);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function captureBlock(o) {
+  var children = [];
+  var capture = true;
+  var open = 0;
+  var s = "";
+
+  while (capture && o.str[o.index]) {
+    while (_IS_SPACE2.default[o.str[o.index]]) {
+      o.index += 1;
+    }
+
+    s = o.str.substring(o.index);
+    if (o.str[o.index] === "{") {
+      open += 1;
+    } else if (o.str[o.index] === "}") {
+      open -= 1;
+    } else if (/^[a-z-]+(\s+|):/.test(s)) {
+      children.push((0, _captureDeclaration2.default)(o));
+    } else {
+      children.push((0, _captureStyle2.default)(o));
+    }
+
+    if (open === 0) {
+      capture = false;
+    }
+
+    o.index += 1;
+  }
+
+  return children;
+}
+
+/***/ }),
 /* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -192,51 +249,7 @@ function captureRule(o) {
 }
 
 /***/ }),
-/* 7 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = block;
-
-var _captureDeclaration = __webpack_require__(8);
-
-var _captureDeclaration2 = _interopRequireDefault(_captureDeclaration);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function block(o) {
-  var children = [];
-  var capture = true;
-  var open = 0;
-  var s = "";
-
-  while (capture && o.str[o.index]) {
-    s = o.str.substring(o.index);
-
-    if (o.str[o.index] === "{") {
-      open += 1;
-    } else if (o.str[o.index] === "}") {
-      open -= 1;
-    } else if (/^[a-z-]+(\s+|):/.test(s)) {
-      children.push((0, _captureDeclaration2.default)(o));
-    }
-
-    if (open === 0) {
-      capture = false;
-    }
-
-    o.index += 1;
-  }
-
-  return children;
-}
-
-/***/ }),
+/* 7 */,
 /* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -403,9 +416,9 @@ var _IS_SPACE = __webpack_require__(9);
 
 var _IS_SPACE2 = _interopRequireDefault(_IS_SPACE);
 
-var _block = __webpack_require__(7);
+var _captureBlock = __webpack_require__(5);
 
-var _block2 = _interopRequireDefault(_block);
+var _captureBlock2 = _interopRequireDefault(_captureBlock);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -452,7 +465,7 @@ function captureStyle(o) {
   result.selector = selector.replace(/\s+/g, " ").replace(/\n/g, "").split(",").map(function (a) {
     return a.trim();
   });
-  result.value = (0, _block2.default)(o);
+  result.value = (0, _captureBlock2.default)(o);
   return result;
 }
 
@@ -475,9 +488,9 @@ var _IS_SPACE = __webpack_require__(9);
 
 var _IS_SPACE2 = _interopRequireDefault(_IS_SPACE);
 
-var _index = __webpack_require__(1);
+var _captureBlock = __webpack_require__(5);
 
-var _index2 = _interopRequireDefault(_index);
+var _captureBlock2 = _interopRequireDefault(_captureBlock);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -525,7 +538,7 @@ function captureMedia(o) {
   result.selector = selector.replace(/\s+/g, " ").replace(/\n/g, "").split(",").map(function (a) {
     return a.trim();
   });
-  result.value = (0, _index2.default)(o);
+  result.value = (0, _captureBlock2.default)(o);
   return result;
 }
 

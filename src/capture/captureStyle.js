@@ -1,5 +1,5 @@
-import IS_SPACE   from "../constants/IS_SPACE";
-import block      from "./block";
+import IS_SPACE     from "../constants/IS_SPACE";
+import captureBlock from "./captureBlock";
 
 class Style {
   constructor() {
@@ -37,6 +37,6 @@ export default function captureStyle(o) {
     .replace(/\n/g, "")
     .split(",")
     .map(a => a.trim());
-  result.value    = block(o);
+  result.value    = captureBlock(o);
   return result;
 }

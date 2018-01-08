@@ -13,6 +13,7 @@ module.exports = function (test) {
       }
       `;
       const p = parse(css);
+      console.log(p[0].toString());
       return p[0].toString();
     })
     .isEqual(function () {
