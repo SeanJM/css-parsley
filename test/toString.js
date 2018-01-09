@@ -13,12 +13,41 @@ module.exports = function (test) {
       }
       `;
       const p = parse(css);
-      console.log(p[0].toString());
       return p[0].toString();
     })
     .isEqual(function () {
       return [
-        "@media only screen and (min-device-width : 601px) {",
+        "@media",
+        "  only screen and (min-device-width : 601px) {",
+        "  .content {",
+        "    width: 600px !important;",
+        "  }",
+        "}",
+        ""
+      ].join("\n");
+    });
+
+  test("Multiline Media Query (toString)")
+    .this(function () {
+      const css = `
+      @media
+        only screen
+        and (min-device-width : 601px),
+        only screen
+        and (min-device-width : 601px) {
+        .content {
+          width : 600px !important;
+        }
+      }
+      `;
+      const p = parse(css);
+      return p[0].toString();
+    })
+    .isEqual(function () {
+      return [
+        "@media",
+        "  only screen and (min-device-width : 601px),",
+        "  only screen and (min-device-width : 601px) {",
         "  .content {",
         "    width: 600px !important;",
         "  }",

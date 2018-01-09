@@ -11,7 +11,7 @@ class Media {
   toString(depth) {
     const d   = depth || 0;
     const tab = new Array(d + 1).join("  ");
-    return tab + "@media " + this.selector.join(",") + " {\n" +
+    return tab + "@media\n" + this.selector.map(a => tab + "  " + a).join(",\n") + " {\n" +
       this.value.map(element => element.toString(d + 1)) +
     tab + "}\n";
   }
