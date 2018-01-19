@@ -1,6 +1,27 @@
 const parse = require("../index");
 
 module.exports = function (test) {
+  test("Multiple property style")
+    .this(function () {
+      const css = `
+        .content {
+          width      : 600px;
+          background : red;
+        }
+      `;
+      const p = parse(css);
+      return p[0].toString();
+    })
+    .isEqual(function () {
+      return [
+        ".content {",
+        "  width: 600px;",
+        "  background: red;",
+        "}",
+        ""
+      ].join("\n");
+    });
+
   test("Media Query (toString)")
     .this(function () {
       const css = `
