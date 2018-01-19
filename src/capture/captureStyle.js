@@ -12,7 +12,7 @@ class Style {
     const d   = depth || 0;
     const tab = new Array(d + 1).join("  ");
     return tab + this.selector.join(",") + " {\n" +
-    this.value.map(element => element.toString(d + 1))
+    this.value.map(element => element.toString(d + 1)).join("")
     + tab + "}\n";
   }
 }
